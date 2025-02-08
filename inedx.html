@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeGo</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-size: cover;
+    }
+    /* شريط المعلومات العلوي */
+    .info-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f39c12;
+      width: 90%;
+      max-width: 400px;
+      height: 40px;
+      padding: 5px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .info-bar .coin-info,
+    .info-bar .egp-info {
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+    .info-bar .coin-info img,
+    .info-bar .egp-info img {
+      width: 20px;
+      height: 20px;
+      margin-left: 5px;
+    }
+    /* لضمان ظهور صورة العملة على اليسار في قسم Coin */
+    .info-bar .coin-info {
+      flex-direction: row-reverse;
+    }
+    .video-container {
+      position: relative;
+      display: inline-block;
+      padding: 10px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+    }
+    video {
+      width: 100%;
+      border-radius: 10px;
+    }
+    #next-icon {
+      display: none;
+      position: fixed;
+      bottom: 10vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12vw;
+      height: 12vw;
+      cursor: pointer;
+      opacity: 0.3;
+      animation: blink 1s infinite alternate;
+    }
+    @keyframes blink {
+      0% { opacity: 0.3; transform: translateX(-50%) scale(1); }
+      100% { opacity: 0.9; transform: translateX(-50%) scale(1.2); }
+    }
+    /* زر الانتقال إلى صفحة السحب */
+    #withdraw-button {
+      position: absolute;
+      top: 7px;
+      right: 490px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    #withdraw-button img {
+      width: 40px;
+      height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <!-- زر الانتقال لصفحة السحب -->
+  <button id="withdraw-button" onclick="goToWithdrawPage()">
+    <img src="withdraw-icon.png" alt="انتقل إلى السحب" />
+  </button>
+
+  <div class="info-bar">
+    <div class="coin-info">
+      <span id="coins">0</span> Coin
+      <img src="coin-icon.png" alt="Coin Icon" />
+    </div>
+    <div class="egp-info">
+      <img src="eg-icon.png" alt="EGP Icon" />
+      <span id="eg-value">0</span> EGP
+    </div>
+  </div>
+
+  <div class="video-container">
+    <video id="video-player" controls autoplay>
+      <source id="video-source" src="1.mp4" type="video/mp4" />
+      متصفحك لا يدعم تشغيل الفيديو.
+    </video>
+  </div>
+
+  <img id="next-icon" src="ico.ico" alt="التالي" />
+
+  <script>
+    let coins = 0;
+    const coinToEGP = 0.4; // 1 Coin = 0.4 EGP
+    let totalVideos = 2;  // تأكد من وجود "1.mp4" و "2.mp4" في نفس المجلد
+    let videoPlayer = document.getElementById("video-player");
+    let nextIcon = document.getElementById("next-icon");
+    let watchedOnce = false;
+
+    // عند تحميل الصفحة، استرجع القيم المخزنة (إن وُجدت) لتبقى ثابتة
+    document.addEventListener("DOMContentLoaded", function() {
+      let storedCoins = localStorage.getItem("coins");
+      let storedEGP = localStorage.getItem("userBalance");
+      if(storedCoins !== null) {
+        coins = parseInt(storedCoins, 10);
+        document.getElementById("coins").innerText = coins;
+      }
+      if(storedEGP !== null) {
+        document.getElementById("eg-value").innerText = parseFloat(storedEGP).toFixed(2);
+      }
+    });
+
+    function getRandomVideoIndex(){
+      return Math.floor(Math.random() * totalVideos) + 1;
+    }
+
+    function loadRandomVideo(){
+      let randomIndex = getRandomVideoIndex();
+      let videoPath = randomIndex + ".mp4";
+      videoPlayer.pause();
+      videoPlayer.src = videoPath;
+      videoPlayer.load();
+      videoPlayer.play();
+      watchedOnce = false;
+      nextIcon.style.display = "none";
+    }
+
+    loadRandomVideo();
+
+    videoPlayer.onended = function(){
+      nextIcon.style.display = "block";
+      if(!watchedOnce){
+        coins += 1;
+        document.getElementById("coins").innerText = coins;
+        let egpValue = (coins * coinToEGP).toFixed(2);
+        document.getElementById("eg-value").innerText = egpValue;
+        // تخزين البيانات في localStorage
+        localStorage.setItem("coins", coins);
+        localStorage.setItem("userBalance", egpValue);
+        console.log("تم تخزين الرصيد:", egpValue);
+        watchedOnce = true;
+      }
+    };
+
+    nextIcon.onclick = function(){
+      window.scrollTo({ top: window.scrollY + window.innerHeight, behavior: "smooth" });
+      setTimeout(() => { loadRandomVideo(); }, 1000);
+    };
+
+    function goToWithdrawPage(){
+      // تأكد من حفظ البيانات قبل الانتقال
+      localStorage.setItem("coins", coins);
+      localStorage.setItem("userBalance", (coins * coinToEGP).toFixed(2));
+      window.location.href = "withdraw.html";
+    }
+  </script>
+</body>
+</html>

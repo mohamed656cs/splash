@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>سحب الرصيد</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap');
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(145deg, #f7d794, #eab543);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .balance-info {
+      font-size: 22px;
+      font-weight: bold;
+      color: #d35400;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .balance-info img {
+      width: 18px; /* تكبير الصورة */
+      height: 18px;
+      margin-left: 5px;
+    }
+
+    .slider-container {
+      margin: 20px 0;
+    }
+
+    .slider {
+      width: 100%;
+      height: 12px;
+      background: #f39c12;
+      border-radius: 10px;
+      outline: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .slider::-webkit-slider-thumb {
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #d35400;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slider-value img {
+      width: 18px; /* نفس حجم صورة EGP */
+      height: 18px;
+      margin-left: 5px;
+    }
+
+    .btn-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 18px;
+      background-color: #f39c12;
+      border: none;
+      color: white;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #e67e22;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .error-message {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #e74c3c;
+    }
+
+    /* صور الزرار */
+    .side-image {
+      position: absolute;
+      width: 45px;
+      height: 45px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .left-image {
+      left: -35px; /* تقريبه للداخل أكثر */
+    }
+
+    .right-image {
+      right: -35px; /* تقريبه للداخل أكثر */
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      button {
+        font-size: 16px;
+        padding: 10px 20px;
+      }
+
+      .side-image {
+        width: 38px;
+        height: 38px;
+      }
+
+      .left-image {
+        left: -30px;
+      }
+
+      .right-image {
+        right: -30px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="balance-info">
+      رصيدك الحالي: <span id="egp-balance">0.00</span> EGP <img src="eg-icon.png" alt="EGP Icon" />
+    </div>
+
+    <div class="slider-container">
+      <input type="range" id="amount" class="slider" min="0" max="100" value="0" step="1">
+      <div class="slider-value" id="slider-value">0 EGP <img src="eg-icon.png" alt="EGP Icon" /></div>
+    </div>
+
+    <div class="btn-container">
+      <img src="left-icon.png" alt="Icon Left" class="side-image left-image" />
+      <button onclick="goToCashPage()">متابعة</button>
+      <img src="right-icon.png" alt="Icon Right" class="side-image right-image" />
+    </div>
+
+    <div class="error-message" id="error-message"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      let storedEGP = localStorage.getItem("userBalance");
+      if (storedEGP !== null) {
+        document.getElementById("egp-balance").innerText = storedEGP;
+        document.getElementById("amount").max = parseFloat(storedEGP);
+      }
+    });
+
+    const slider = document.getElementById("amount");
+    const sliderValue = document.getElementById("slider-value");
+
+    slider.oninput = function() {
+      sliderValue.innerHTML = slider.value + " EGP <img src='eg-icon.png' alt='EGP Icon' />";
+    };
+
+    function goToCashPage() {
+      let withdrawAmount = slider.value;
+      let availableBalance = parseFloat(document.getElementById("egp-balance").innerText);
+
+      if (withdrawAmount > 0 && withdrawAmount <= availableBalance) {
+        localStorage.setItem("withdrawAmount", withdrawAmount);
+        window.location.href = "cash.html";
+      } else {
+        document.getElementById("error-message").innerText = "من فضلك اختر مبلغًا صحيحًا للسحب.";
+      }
+    }
+  </script>
+
+</body>
+</html>

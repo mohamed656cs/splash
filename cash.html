@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختيار الصورة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            flex-direction: column; /* يمكنك إضافة هذا لتنسيق عناصر body بشكل رأسي */
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px; /* هذا لإضافة مسافة بين الصور والنص */
+        }
+
+        .gallery-item {
+            margin: 10px;
+            cursor: pointer;
+            width: 150px; /* عرض الصورة */
+            height: 150px; /* ارتفاع الصورة */
+            overflow: hidden; /* لضمان أن الصور لا تتجاوز هذا الحجم */
+        }
+
+        .gallery-item img {
+            width: 100%; /* تعبئة العرض */
+            height: 100%; /* تعبئة الارتفاع */
+            object-fit: cover; /* السماح للصورة بالحفاظ على نسبة الأبعاد وتعبئة المربع */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .gallery-item img:hover {
+            transform: scale(1.1);
+        }
+
+        .message {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery">
+        <div class="gallery-item" onclick="openIndexPage()">
+            <img src="image1.jpg" alt="صورة 1">
+        </div>
+        <div class="gallery-item" onclick="openIndexPage()">
+            <img src="image2.jpg" alt="صورة 2">
+        </div>
+        <div class="gallery-item" onclick="openIndexPage()">
+            <img src="image3.jpg" alt="صورة 3">
+        </div>
+        <div class="gallery-item" onclick="openIndexPage()">
+            <img src="image4.jpg" alt="صورة 4">
+        </div>
+        <div class="gallery-item" onclick="openIndexPage()">
+            <img src="image5.jpg" alt="صورة 5">
+        </div>
+        <div class="gallery-item" onclick="openIndexPage()">
+            <img src="image6.jpg" alt="صورة 6">
+        </div>
+    </div>
+
+    <div class="message">
+        اختر طريقة التحويل المتاحة لك لارسال المبلغ
+    </div>
+
+    <script>
+        function openIndexPage() {
+            window.location.href = '11.html';
+        }
+    </script>
+</body>
+</html>

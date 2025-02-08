@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق تحويل الأموال</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
+            color: #333333;
+            text-align: center;
+        }
+
+        #description {
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        #form-container {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #cccccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #008069;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #008069;
+        }
+    </style>
+    <script>
+        function redirectToCountdown() {
+            window.location.href = 'countdown.html';
+        }
+    </script>
+</head>
+<body>
+    <div id="description">
+      
+        <p>لارسال الاموال يرجى كتابة رقم الهاتف والضغط علي أرسال لتحويل المبلغ</p>
+    </div>
+    <div id="form-container">
+        <div class="input-group">
+            <label for="country-code">كود الدولة</label>
+            <select id="country-code">
+                <option value="+20">+20 مصر</option>
+                <option value="+966">+966 السعودية</option>
+                <option value="+971">+971 الإمارات</option>
+                <option value="+1">+1 الولايات المتحدة</option>
+                <!-- يمكن إضافة المزيد من الأكواد هنا -->
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="phone-number">رقم الهاتف</label>
+            <input type="text" id="phone-number" placeholder="أدخل رقم الهاتف">
+        </div>
+        <button onclick="redirectToCountdown()">إرسال</button>
+    </div>
+</body>
+</html>
